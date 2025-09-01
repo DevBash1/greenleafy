@@ -144,17 +144,29 @@ export default function App() {
                 className="sticky top-0 z-40 border-b border-emerald-200 bg-white/95 backdrop-blur"
             >
                 <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
-                    <a href="#home" className="text-lg font-semibold text-emerald-900">
+                    <a
+                        href="#home"
+                        className="text-lg font-semibold text-emerald-900"
+                    >
                         GreenLeafy
                     </a>
                     <div className="hidden gap-6 sm:flex">
-                        <a href="#overview" className="text-emerald-700 hover:text-emerald-900">
+                        <a
+                            href="#overview"
+                            className="text-emerald-700 hover:text-emerald-900"
+                        >
                             Overview
                         </a>
-                        <a href="#controls" className="text-emerald-700 hover:text-emerald-900">
+                        <a
+                            href="#controls"
+                            className="text-emerald-700 hover:text-emerald-900"
+                        >
                             Controls
                         </a>
-                        <a href="#plans" className="text-emerald-700 hover:text-emerald-900">
+                        <a
+                            href="#plans"
+                            className="text-emerald-700 hover:text-emerald-900"
+                        >
                             Plans
                         </a>
                     </div>
@@ -168,8 +180,8 @@ export default function App() {
                         Monitor your plants in real time
                     </h1>
                     <p className="mt-3 text-emerald-700">
-                        Track water level, temperature, soil moisture, and light with a clean
-                        white/green theme.
+                        Track water level, temperature, soil moisture, and light
+                        with a clean white/green theme.
                     </p>
                 </div>
             </Section>
@@ -179,30 +191,50 @@ export default function App() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <StatCard
                         label="Water Level"
-                        value={metrics ? metrics.waterLevel.toFixed(0) : "--"}
+                        value={metrics ? metrics.waterLevel?.toFixed(0) : "--"}
                         unit="%"
                         status={waterStatus}
                         hint="Reservoir status"
                     />
                     <StatCard
                         label="Temperature"
-                        value={metrics ? metrics.temperatureC.toFixed(1) : "--"}
+                        value={
+                            metrics ? metrics.temperatureC?.toFixed(1) : "--"
+                        }
                         unit="°C"
-                        status={metrics ? (metrics.temperatureC < 15 ? "Cool" : metrics.temperatureC > 30 ? "Hot" : "Comfortable") : undefined}
+                        status={
+                            metrics
+                                ? metrics.temperatureC < 15
+                                    ? "Cool"
+                                    : metrics.temperatureC > 30
+                                    ? "Hot"
+                                    : "Comfortable"
+                                : undefined
+                        }
                         hint="Ambient"
                     />
                     <StatCard
                         label="Soil Moisture"
-                        value={metrics ? metrics.soilMoisture.toFixed(0) : "--"}
+                        value={
+                            metrics ? metrics.soilMoisture?.toFixed(0) : "--"
+                        }
                         unit="%"
                         status={soilStatus}
                         hint="Target 35–60%"
                     />
                     <StatCard
                         label="Light"
-                        value={metrics ? metrics.lightLux.toFixed(0) : "--"}
+                        value={metrics ? metrics.lightLux?.toFixed(0) : "--"}
                         unit="lux"
-                        status={metrics ? (metrics.lightLux < 3000 ? "Low" : metrics.lightLux > 15000 ? "Strong" : "Moderate") : undefined}
+                        status={
+                            metrics
+                                ? metrics.lightLux < 3000
+                                    ? "Low"
+                                    : metrics.lightLux > 15000
+                                    ? "Strong"
+                                    : "Moderate"
+                                : undefined
+                        }
                         hint="Photosynthetically useful light"
                     />
                 </div>
@@ -214,86 +246,275 @@ export default function App() {
                     <div className="rounded-xl border border-emerald-200 bg-white p-5">
                         <div className="flex items-center justify-between">
                             <div>
-                                <div className="text-sm text-emerald-700">Live telemetry</div>
+                                <div className="text-sm text-emerald-700">
+                                    Live telemetry
+                                </div>
                                 <div className="text-lg font-semibold text-emerald-900">
                                     {metrics ? "Receiving" : "Waiting for data"}
                                 </div>
                             </div>
                         </div>
                         <div className="mt-6">
-                            <div className="text-sm font-medium text-emerald-900">Plant simulation</div>
+                            <div className="text-sm font-medium text-emerald-900">
+                                Plant simulation
+                            </div>
                             <div className="mt-2 rounded-lg border border-emerald-200 bg-emerald-50/40 p-4">
                                 <div className="flex items-center gap-4">
                                     {/* Plant + soil SVG with animations */}
                                     <div className="relative h-20 w-24 shrink-0">
-                                        <svg viewBox="0 0 120 100" className="h-full w-full">
+                                        <svg
+                                            viewBox="0 0 120 100"
+                                            className="h-full w-full"
+                                        >
                                             {/* Soil mound */}
-                                            <ellipse cx="60" cy="86" rx="18" ry="6" fill="#5b3a29" stroke="#8b5e3c" strokeWidth="2" />
+                                            <ellipse
+                                                cx="60"
+                                                cy="86"
+                                                rx="18"
+                                                ry="6"
+                                                fill="#5b3a29"
+                                                stroke="#8b5e3c"
+                                                strokeWidth="2"
+                                            />
                                             {/* Water droplets when watering */}
                                             {waterAnim ? (
                                                 <g>
-                                                    <circle cx="40" cy="30" r="3" fill="#60a5fa">
-                                                        <animate attributeName="cy" from="20" to="84" dur="0.8s" fill="freeze" />
-                                                        <animate attributeName="opacity" from="1" to="0" dur="0.8s" fill="freeze" />
+                                                    <circle
+                                                        cx="40"
+                                                        cy="30"
+                                                        r="3"
+                                                        fill="#60a5fa"
+                                                    >
+                                                        <animate
+                                                            attributeName="cy"
+                                                            from="20"
+                                                            to="84"
+                                                            dur="0.8s"
+                                                            fill="freeze"
+                                                        />
+                                                        <animate
+                                                            attributeName="opacity"
+                                                            from="1"
+                                                            to="0"
+                                                            dur="0.8s"
+                                                            fill="freeze"
+                                                        />
                                                     </circle>
-                                                    <circle cx="60" cy="28" r="2.5" fill="#60a5fa">
-                                                        <animate attributeName="cy" from="18" to="84" dur="0.8s" fill="freeze" />
-                                                        <animate attributeName="opacity" from="1" to="0" dur="0.8s" fill="freeze" />
+                                                    <circle
+                                                        cx="60"
+                                                        cy="28"
+                                                        r="2.5"
+                                                        fill="#60a5fa"
+                                                    >
+                                                        <animate
+                                                            attributeName="cy"
+                                                            from="18"
+                                                            to="84"
+                                                            dur="0.8s"
+                                                            fill="freeze"
+                                                        />
+                                                        <animate
+                                                            attributeName="opacity"
+                                                            from="1"
+                                                            to="0"
+                                                            dur="0.8s"
+                                                            fill="freeze"
+                                                        />
                                                     </circle>
-                                                    <circle cx="80" cy="26" r="2" fill="#60a5fa">
-                                                        <animate attributeName="cy" from="16" to="84" dur="0.8s" fill="freeze" />
-                                                        <animate attributeName="opacity" from="1" to="0" dur="0.8s" fill="freeze" />
+                                                    <circle
+                                                        cx="80"
+                                                        cy="26"
+                                                        r="2"
+                                                        fill="#60a5fa"
+                                                    >
+                                                        <animate
+                                                            attributeName="cy"
+                                                            from="16"
+                                                            to="84"
+                                                            dur="0.8s"
+                                                            fill="freeze"
+                                                        />
+                                                        <animate
+                                                            attributeName="opacity"
+                                                            from="1"
+                                                            to="0"
+                                                            dur="0.8s"
+                                                            fill="freeze"
+                                                        />
                                                     </circle>
                                                 </g>
                                             ) : null}
                                             {/* Soil ripple on watering */}
                                             {waterAnim ? (
                                                 <g>
-                                                    <ellipse cx="60" cy="86" rx="6" ry="2" fill="none" stroke="#93c5fd" strokeWidth="1.5" opacity="0.8">
-                                                        <animate attributeName="rx" from="6" to="32" dur="0.9s" fill="freeze" />
-                                                        <animate attributeName="opacity" from="0.8" to="0" dur="0.9s" fill="freeze" />
+                                                    <ellipse
+                                                        cx="60"
+                                                        cy="86"
+                                                        rx="6"
+                                                        ry="2"
+                                                        fill="none"
+                                                        stroke="#93c5fd"
+                                                        strokeWidth="1.5"
+                                                        opacity="0.8"
+                                                    >
+                                                        <animate
+                                                            attributeName="rx"
+                                                            from="6"
+                                                            to="32"
+                                                            dur="0.9s"
+                                                            fill="freeze"
+                                                        />
+                                                        <animate
+                                                            attributeName="opacity"
+                                                            from="0.8"
+                                                            to="0"
+                                                            dur="0.9s"
+                                                            fill="freeze"
+                                                        />
                                                     </ellipse>
                                                 </g>
                                             ) : null}
                                             {/* Plant group */}
-                                            <g transform="translate(60,80)" style={{ filter: lightGlow ? "drop-shadow(0 0 6px rgba(16,185,129,0.8))" : "none" }}>
+                                            <g
+                                                transform="translate(60,80)"
+                                                style={{
+                                                    filter: lightGlow
+                                                        ? "drop-shadow(0 0 6px rgba(16,185,129,0.8))"
+                                                        : "none",
+                                                }}
+                                            >
                                                 {/* Stem (brown, taller, gentle S-curve) */}
-                                                <path d="M0 0 C -4 -14, -4 -30, 0 -44" stroke={tempPulse === 1 ? "#ef4444" : tempPulse === -1 ? "#3b82f6" : "#8b5e3c"} strokeWidth="3" fill="none" />
+                                                <path
+                                                    d="M0 0 C -4 -14, -4 -30, 0 -44"
+                                                    stroke={
+                                                        tempPulse === 1
+                                                            ? "#ef4444"
+                                                            : tempPulse === -1
+                                                            ? "#3b82f6"
+                                                            : "#8b5e3c"
+                                                    }
+                                                    strokeWidth="3"
+                                                    fill="none"
+                                                />
                                                 {/* Leaves (broader) with highlights and midribs */}
                                                 <g>
                                                     {/* Left leaf */}
-                                                    <path d="M0 -18 C -22 -20, -34 -6, -36 8 C -22 2, -10 -10, 0 -18 Z" fill={growthIndex > 70 ? "#059669" : growthIndex > 40 ? "#10b981" : "#34d399"} stroke="#047857" strokeWidth="1.2" />
-                                                    <path d="M-2 -18 C -16 -20, -26 -9, -28 3 C -18 -2, -9 -9, -2 -18 Z" fill="#34d399" opacity="0.6" />
-                                                    <path d="M-2 -18 C -12 -14, -20 -6, -26 2" stroke="#065f46" strokeWidth="1" opacity="0.5" fill="none" />
+                                                    <path
+                                                        d="M0 -18 C -22 -20, -34 -6, -36 8 C -22 2, -10 -10, 0 -18 Z"
+                                                        fill={
+                                                            growthIndex > 70
+                                                                ? "#059669"
+                                                                : growthIndex >
+                                                                  40
+                                                                ? "#10b981"
+                                                                : "#34d399"
+                                                        }
+                                                        stroke="#047857"
+                                                        strokeWidth="1.2"
+                                                    />
+                                                    <path
+                                                        d="M-2 -18 C -16 -20, -26 -9, -28 3 C -18 -2, -9 -9, -2 -18 Z"
+                                                        fill="#34d399"
+                                                        opacity="0.6"
+                                                    />
+                                                    <path
+                                                        d="M-2 -18 C -12 -14, -20 -6, -26 2"
+                                                        stroke="#065f46"
+                                                        strokeWidth="1"
+                                                        opacity="0.5"
+                                                        fill="none"
+                                                    />
                                                     {/* Right leaf */}
-                                                    <path d="M0 -26 C 22 -28, 34 -16, 36 -2 C 22 -8, 10 -16, 0 -26 Z" fill={growthIndex > 70 ? "#059669" : growthIndex > 40 ? "#10b981" : "#34d399"} stroke="#047857" strokeWidth="1.2" />
-                                                    <path d="M2 -26 C 16 -28, 26 -18, 28 -6 C 18 -10, 9 -16, 2 -26 Z" fill="#34d399" opacity="0.6" />
-                                                    <path d="M2 -26 C 12 -22, 20 -16, 26 -8" stroke="#065f46" strokeWidth="1" opacity="0.5" fill="none" />
+                                                    <path
+                                                        d="M0 -26 C 22 -28, 34 -16, 36 -2 C 22 -8, 10 -16, 0 -26 Z"
+                                                        fill={
+                                                            growthIndex > 70
+                                                                ? "#059669"
+                                                                : growthIndex >
+                                                                  40
+                                                                ? "#10b981"
+                                                                : "#34d399"
+                                                        }
+                                                        stroke="#047857"
+                                                        strokeWidth="1.2"
+                                                    />
+                                                    <path
+                                                        d="M2 -26 C 16 -28, 26 -18, 28 -6 C 18 -10, 9 -16, 2 -26 Z"
+                                                        fill="#34d399"
+                                                        opacity="0.6"
+                                                    />
+                                                    <path
+                                                        d="M2 -26 C 12 -22, 20 -16, 26 -8"
+                                                        stroke="#065f46"
+                                                        strokeWidth="1"
+                                                        opacity="0.5"
+                                                        fill="none"
+                                                    />
                                                     {/* Top leaf */}
-                                                    <path d="M0 -36 C -14 -38, -24 -30, -26 -24 C -14 -26, -6 -30, 0 -36 Z" fill={growthIndex > 70 ? "#059669" : growthIndex > 40 ? "#10b981" : "#34d399"} stroke="#047857" strokeWidth="1.2" />
-                                                    <path d="M-1 -36 C -10 -38, -18 -31, -20 -26 C -11 -28, -5 -31, -1 -36 Z" fill="#34d399" opacity="0.6" />
-                                                    <path d="M-1 -36 C -8 -33, -15 -28, -19 -25" stroke="#065f46" strokeWidth="1" opacity="0.5" fill="none" />
+                                                    <path
+                                                        d="M0 -36 C -14 -38, -24 -30, -26 -24 C -14 -26, -6 -30, 0 -36 Z"
+                                                        fill={
+                                                            growthIndex > 70
+                                                                ? "#059669"
+                                                                : growthIndex >
+                                                                  40
+                                                                ? "#10b981"
+                                                                : "#34d399"
+                                                        }
+                                                        stroke="#047857"
+                                                        strokeWidth="1.2"
+                                                    />
+                                                    <path
+                                                        d="M-1 -36 C -10 -38, -18 -31, -20 -26 C -11 -28, -5 -31, -1 -36 Z"
+                                                        fill="#34d399"
+                                                        opacity="0.6"
+                                                    />
+                                                    <path
+                                                        d="M-1 -36 C -8 -33, -15 -28, -19 -25"
+                                                        stroke="#065f46"
+                                                        strokeWidth="1"
+                                                        opacity="0.5"
+                                                        fill="none"
+                                                    />
                                                 </g>
                                             </g>
                                         </svg>
                                         {/* Light halo when glow enabled */}
                                         {lightGlow ? (
-                                            <div className="pointer-events-none absolute inset-0 rounded-lg glow-pulse" style={{ boxShadow: "0 0 24px 6px rgba(16,185,129,0.35)" }} />
+                                            <div
+                                                className="pointer-events-none absolute inset-0 rounded-lg glow-pulse"
+                                                style={{
+                                                    boxShadow:
+                                                        "0 0 24px 6px rgba(16,185,129,0.35)",
+                                                }}
+                                            />
                                         ) : null}
                                     </div>
                                     <div className="grow">
                                         <div className="flex items-center justify-between text-sm text-emerald-800">
                                             <span>Growth index</span>
-                                            <span className="font-semibold">{isNaN(growthIndex) ? "--" : `${growthIndex}%`}</span>
+                                            <span className="font-semibold">
+                                                {isNaN(growthIndex)
+                                                    ? "--"
+                                                    : `${growthIndex}%`}
+                                            </span>
                                         </div>
                                         <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-emerald-100">
                                             <div
                                                 className="h-full bg-emerald-500 transition-[width] duration-500"
-                                                style={{ width: `${clamp01(growthIndex / 100) * 100}%` }}
+                                                style={{
+                                                    width: `${
+                                                        clamp01(
+                                                            growthIndex / 100
+                                                        ) * 100
+                                                    }%`,
+                                                }}
                                             />
                                         </div>
                                         <div className="mt-2 text-xs text-emerald-700">
-                                            Optimal conditions boost growth: balanced water, soil, temp ~24°C, 4k–16k lux.
+                                            Optimal conditions boost growth:
+                                            balanced water, soil, temp ~24°C,
+                                            4k–16k lux.
                                         </div>
                                     </div>
                                 </div>
@@ -308,13 +529,21 @@ export default function App() {
             {/* Plans */}
             <Section id="plans" className="pt-2">
                 <div className="mx-auto max-w-5xl">
-                    <h2 className="text-2xl font-bold text-emerald-900">Plans</h2>
-                    <p className="mt-2 text-emerald-700">Choose a plan and integrate with your stack.</p>
+                    <h2 className="text-2xl font-bold text-emerald-900">
+                        Plans
+                    </h2>
+                    <p className="mt-2 text-emerald-700">
+                        Choose a plan and integrate with your stack.
+                    </p>
                     <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
                         {/* Basic */}
                         <div className="rounded-xl border border-emerald-200 bg-white p-6">
-                            <div className="text-sm text-emerald-700">Basic</div>
-                            <div className="mt-1 text-3xl font-semibold text-emerald-900">$0</div>
+                            <div className="text-sm text-emerald-700">
+                                Basic
+                            </div>
+                            <div className="mt-1 text-3xl font-semibold text-emerald-900">
+                                $0
+                            </div>
                             <ul className="mt-4 space-y-2 text-sm text-emerald-800">
                                 <li>• Local simulator</li>
                                 <li>• Core metrics dashboard</li>
@@ -333,7 +562,12 @@ export default function App() {
                         {/* Pro */}
                         <div className="rounded-xl border border-emerald-300 bg-emerald-50 p-6 ring-1 ring-emerald-200">
                             <div className="text-sm text-emerald-800">Pro</div>
-                            <div className="mt-1 text-3xl font-semibold text-emerald-900">$19<span className="text-base font-normal">/mo</span></div>
+                            <div className="mt-1 text-3xl font-semibold text-emerald-900">
+                                $19
+                                <span className="text-base font-normal">
+                                    /mo
+                                </span>
+                            </div>
                             <ul className="mt-4 space-y-2 text-sm text-emerald-900">
                                 <li>• Real sensor streaming (sockets)</li>
                                 <li>• Alerts & thresholds</li>
@@ -356,11 +590,19 @@ export default function App() {
             {/* Footer */}
             <footer className="border-t border-emerald-200 py-8">
                 <div className="mx-auto max-w-6xl px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div className="text-emerald-700">© {new Date().getFullYear()} GreenLeafy</div>
+                    <div className="text-emerald-700">
+                        © {new Date().getFullYear()} GreenLeafy
+                    </div>
                     <div className="flex gap-6 text-emerald-700">
-                        <a href="#overview" className="hover:text-emerald-900">Overview</a>
-                        <a href="#controls" className="hover:text-emerald-900">Controls</a>
-                        <a href="#plans" className="hover:text-emerald-900">Plans</a>
+                        <a href="#overview" className="hover:text-emerald-900">
+                            Overview
+                        </a>
+                        <a href="#controls" className="hover:text-emerald-900">
+                            Controls
+                        </a>
+                        <a href="#plans" className="hover:text-emerald-900">
+                            Plans
+                        </a>
                     </div>
                 </div>
             </footer>
@@ -371,8 +613,12 @@ export default function App() {
                     <div className="w-full max-w-md rounded-xl border border-emerald-200 bg-white p-6 shadow-xl">
                         <div className="flex items-start justify-between">
                             <div>
-                                <div className="text-sm text-emerald-700">Integration</div>
-                                <div className="text-lg font-semibold text-emerald-900">{selectedPlan} plan</div>
+                                <div className="text-sm text-emerald-700">
+                                    Integration
+                                </div>
+                                <div className="text-lg font-semibold text-emerald-900">
+                                    {selectedPlan} plan
+                                </div>
                             </div>
                             <button
                                 className="rounded-md px-2 py-1 text-emerald-700 hover:bg-emerald-50"
@@ -384,14 +630,22 @@ export default function App() {
                         {!ensyncUrl ? (
                             <div className="mt-4 space-y-4">
                                 <p className="text-sm text-emerald-800">
-                                    Connect EnSync to relay your plant simulation events.
+                                    Connect EnSync to relay your plant
+                                    simulation events.
                                 </p>
                                 <div className="flex items-center justify-between rounded-md border border-emerald-200 bg-emerald-50/40 p-4">
                                     <div>
-                                        <div className="font-medium text-emerald-900">EnSync</div>
-                                        <div className="text-xs text-emerald-700">Event-driven Synchronization Engine</div>
+                                        <div className="font-medium text-emerald-900">
+                                            EnSync
+                                        </div>
+                                        <div className="text-xs text-emerald-700">
+                                            Event-driven Synchronization Engine
+                                        </div>
                                         <div className="mt-2 text-xs text-emerald-700">
-                                            Session: <span className="font-mono text-emerald-900">{sessionId}</span>
+                                            Session:{" "}
+                                            <span className="font-mono text-emerald-900">
+                                                {sessionId}
+                                            </span>
                                         </div>
                                     </div>
                                     <button
@@ -407,21 +661,38 @@ export default function App() {
                                                 let sid = sessionId;
                                                 if (!sid) {
                                                     sid = generateSessionId();
-                                                    localStorage.setItem("greenleafy_session_id", sid);
+                                                    localStorage.setItem(
+                                                        "greenleafy_session_id",
+                                                        sid
+                                                    );
                                                     setSessionId(sid);
                                                 }
-                                                const plan = (selectedPlan || "basic").toLowerCase() === "pro" ? "pro" : "basic";
-                                                const res = await fetch(`http://localhost:4000/api/ensync/connect/${plan}?session=${encodeURIComponent(sid)}`);
+                                                const plan =
+                                                    (
+                                                        selectedPlan || "basic"
+                                                    ).toLowerCase() === "pro"
+                                                        ? "pro"
+                                                        : "basic";
+                                                const res = await fetch(
+                                                    `http://localhost:4000/api/ensync/connect/${plan}?session=${encodeURIComponent(
+                                                        sid
+                                                    )}`
+                                                );
                                                 const data = await res.json();
                                                 setEnsyncUrl(data?.url || "");
                                             } catch (e) {
-                                                console.error("Failed to fetch EnSync URL", e);
+                                                console.error(
+                                                    "Failed to fetch EnSync URL",
+                                                    e
+                                                );
                                             } finally {
                                                 setEnsyncLoading(false);
                                             }
                                         }}
                                     >
-                                        {ensyncLoading ? "Connecting..." : "Connect"}
+                                        {ensyncLoading
+                                            ? "Connecting..."
+                                            : "Connect"}
                                     </button>
                                 </div>
                                 <div className="flex justify-end">
@@ -435,7 +706,9 @@ export default function App() {
                                 <div className="flex justify-end gap-2 pt-2">
                                     <button
                                         className="rounded-md border border-emerald-300 bg-white px-3 py-2 text-emerald-800 hover:bg-emerald-50"
-                                        onClick={() => setShowIntegrationModal(false)}
+                                        onClick={() =>
+                                            setShowIntegrationModal(false)
+                                        }
                                     >
                                         Close
                                     </button>
@@ -444,12 +717,19 @@ export default function App() {
                         ) : (
                             <div className="mt-4">
                                 <div className="rounded-lg overflow-hidden border border-emerald-200">
-                                    <iframe title="EnSync Connect" src={ensyncUrl} className="w-full" style={{ height: 520 }} />
+                                    <iframe
+                                        title="EnSync Connect"
+                                        src={ensyncUrl}
+                                        className="w-full"
+                                        style={{ height: 520 }}
+                                    />
                                 </div>
                                 <div className="mt-4 flex justify-end">
                                     <button
                                         className="rounded-md border border-emerald-300 bg-white px-3 py-2 text-emerald-800 hover:bg-emerald-50"
-                                        onClick={() => setShowIntegrationModal(false)}
+                                        onClick={() =>
+                                            setShowIntegrationModal(false)
+                                        }
                                     >
                                         Done
                                     </button>

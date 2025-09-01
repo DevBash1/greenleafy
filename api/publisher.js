@@ -114,6 +114,8 @@ async function publishLoop() {
 
         // Random gap before next cycle
         await sleep(randInt(1500, 3500));
+
+        console.log("Sent data");
     }
 }
 

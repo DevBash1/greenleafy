@@ -58,9 +58,38 @@ async function startSubscriber() {
 
         // Create a subscription for each topic
         for (const topic of topics) {
+            // Test emit
+            setInterval(() => {
+                const mapped = socketEventMap[topic];
+
+                if (mapped) {
+                    function randInt(min, max) {
+                        return (
+                            Math.floor(Math.random() * (max - min + 1)) + min
+                        );
+                    }
+
+                    // Keep simple drifting state to look realistic
+                    const state = {
+                        waterLevel: randInt(35, 75), // %
+                        soilMoisture: randInt(30, 65), // %
+                        temperatureC: 22 + Math.random() * 6, // 22–28C
+                        lightLux: randInt(3500, 14000), // lux
+                    };
+
+                    emitToAll(mapped, {
+                        moisture: state.soilMoisture,
+                        level: state.waterLevel,
+                        celsius: state.temperatureC,
+                        lux: state.lightLux,
+                        timestamp: Date.now(),
+                    });
+                }
+            }, 1000);
+
             try {
-                const sub = await client.subscribe(topic, appSecretKey);
-                sub.pull({ autoAck: false }, async (event) => {
+                const sub = await client.subscribe(topic, { appSecretKey });
+                sub.on(async (event) => {
                     try {
                         const payload = extractPayload(event);
 
@@ -78,7 +107,8 @@ async function startSubscriber() {
                         }
 
                         // Ack this message
-                        await sub.ack(event.id, event.block);
+                        // await sub.ack(event.idem, event.block);
+                        // await subscription.unsubscribe();
                     } catch (e) {
                         console.log("Subscriber handler exception", e);
                     }
