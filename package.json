@@ -4,7 +4,8 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "dev": "concurrently -k -n web,api -c blue,magenta \"vite --port 5174\" \"bun --watch run api/app.js\"",
+        "dev": "concurrently -k -n web,api,publisher -c blue,magenta,red \"vite --port 5174\" \"bun --watch run api/app.js\" \"bun --watch run api/publisher.js\"",
+        "publish": "bun --watch run api/publisher.js",
         "build": "vite build",
         "preview": "vite preview"
     },

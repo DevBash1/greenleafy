@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
-import PlantSimulator from "./BicycleSimulator.jsx";
 
 function Section({ id, className = "", children }) {
     return (
@@ -36,8 +35,7 @@ function StatCard({ label, value, unit, status, hint }) {
 
 export default function App() {
     const headerRef = useRef(null);
-    const [metrics, setMetrics] = useState(null); // { waterLevel, temperatureC, soilMoisture, lightLux, running }
-    const [controls, setControls] = useState(null);
+    const [metrics, setMetrics] = useState(null); // { waterLevel, temperatureC, soilMoisture, lightLux }
     const [showIntegrationModal, setShowIntegrationModal] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState(null);
     const [ensyncLoading, setEnsyncLoading] = useState(false);
@@ -101,20 +99,28 @@ export default function App() {
         };
     }, []);
 
-    // Emit plant metrics when they change (rounded to reduce noise)
+    // Subscribe to incoming telemetry from Socket.IO and update metrics
     useEffect(() => {
         const s = socketRef.current;
-        if (!s || !metrics) return;
-        const ts = Date.now();
-        const water = clamp01((metrics.waterLevel ?? 0) / 100) * 100;
-        const soil = clamp01((metrics.soilMoisture ?? 0) / 100) * 100;
-        const temp = Number.isFinite(metrics.temperatureC) ? Number(metrics.temperatureC.toFixed(1)) : null;
-        const lux = Number.isFinite(metrics.lightLux) ? Math.round(metrics.lightLux) : null;
-        if (Number.isFinite(water)) s.emit("plant_water", { level: Math.round(water), timestamp: ts });
-        if (Number.isFinite(soil)) s.emit("plant_soil", { moisture: Math.round(soil), timestamp: ts });
-        if (temp != null) s.emit("plant_temp", { celsius: temp, timestamp: ts });
-        if (lux != null) s.emit("plant_light", { lux, timestamp: ts });
-    }, [metrics?.waterLevel, metrics?.soilMoisture, metrics?.temperatureC, metrics?.lightLux]);
+        if (!s) return;
+        const update = (patch) => {
+            setMetrics((prev) => ({ ...(prev || {}), ...patch }));
+        };
+        const onWater = ({ level }) => update({ waterLevel: level });
+        const onSoil = ({ moisture }) => update({ soilMoisture: moisture });
+        const onTemp = ({ celsius }) => update({ temperatureC: celsius });
+        const onLight = ({ lux }) => update({ lightLux: lux });
+        s.on("plant_water", onWater);
+        s.on("plant_soil", onSoil);
+        s.on("plant_temp", onTemp);
+        s.on("plant_light", onLight);
+        return () => {
+            s.off("plant_water", onWater);
+            s.off("plant_soil", onSoil);
+            s.off("plant_temp", onTemp);
+            s.off("plant_light", onLight);
+        };
+    }, []);
 
     const generateSessionId = () => {
         const rnd = Math.random().toString(36).slice(2);
@@ -208,28 +214,12 @@ export default function App() {
                     <div className="rounded-xl border border-emerald-200 bg-white p-5">
                         <div className="flex items-center justify-between">
                             <div>
-                                <div className="text-sm text-emerald-700">Simulator</div>
+                                <div className="text-sm text-emerald-700">Live telemetry</div>
                                 <div className="text-lg font-semibold text-emerald-900">
-                                    {metrics?.running ? "Running" : "Stopped"}
+                                    {metrics ? "Receiving" : "Waiting for data"}
                                 </div>
                             </div>
-                            <button
-                                className={`rounded-md px-3 py-2 text-sm ring-1 transition-all ${
-                                    metrics?.running
-                                        ? "bg-emerald-600 text-white ring-emerald-600 hover:bg-emerald-700"
-                                        : "bg-white text-emerald-700 ring-emerald-300 hover:bg-emerald-50"
-                                }`}
-                                onClick={() => controls?.toggleRunning?.()}
-                            >
-                                {metrics?.running ? "Stop" : "Start"}
-                            </button>
                         </div>
-                        {/* Hidden simulator instance to drive metrics and controls */}
-                        <PlantSimulator
-                            onTick={(d) => setMetrics(d)}
-                            registerControls={(c) => setControls(c)}
-                            className="hidden"
-                        />
                         <div className="mt-6">
                             <div className="text-sm font-medium text-emerald-900">Plant simulation</div>
                             <div className="mt-2 rounded-lg border border-emerald-200 bg-emerald-50/40 p-4">
@@ -311,60 +301,7 @@ export default function App() {
                         </div>
                     </div>
 
-                    <div className="rounded-xl border border-emerald-200 bg-white p-5">
-                        <div className="text-lg font-semibold text-emerald-900">Actions</div>
-                        <div className="mt-4 flex flex-wrap gap-3">
-                            <button
-                                className="rounded-md bg-emerald-600 px-3 py-2 text-white hover:bg-emerald-700"
-                                onClick={() => {
-                                    controls?.toggleRunning?.();
-                                }}
-                            >
-                                {metrics?.running ? "Stop" : "Start"}
-                            </button>
-                            <button
-                                className="rounded-md border border-emerald-300 bg-white px-3 py-2 text-emerald-800 hover:bg-emerald-50"
-                                onClick={() => {
-                                    controls?.waterNow?.();
-                                    setWaterAnim(true);
-                                    setTimeout(() => setWaterAnim(false), 900);
-                                }}
-                            >
-                                Water now
-                            </button>
-                            <button
-                                className={`rounded-md px-3 py-2 ${
-                                    (metrics?.lightLux ?? 0) > 8000 ? "bg-emerald-600 text-white" : "border border-emerald-300 bg-white text-emerald-800 hover:bg-emerald-50"
-                                }`}
-                                onClick={() => {
-                                    controls?.toggleGrowLight?.();
-                                    setLightGlow((v) => !v);
-                                }}
-                            >
-                                Toggle grow light
-                            </button>
-                            <button
-                                className="rounded-md border border-emerald-300 bg-white px-3 py-2 text-emerald-800 hover:bg-emerald-50"
-                                onClick={() => {
-                                    controls?.nudgeTemp?.(1);
-                                    setTempPulse(1);
-                                    setTimeout(() => setTempPulse(0), 700);
-                                }}
-                            >
-                                Warmer +1°C
-                            </button>
-                            <button
-                                className="rounded-md border border-emerald-300 bg-white px-3 py-2 text-emerald-800 hover:bg-emerald-50"
-                                onClick={() => {
-                                    controls?.nudgeTemp?.(-1);
-                                    setTempPulse(-1);
-                                    setTimeout(() => setTempPulse(0), 700);
-                                }}
-                            >
-                                Cooler -1°C
-                            </button>
-                        </div>
-                    </div>
+                    {/* Right column intentionally left out; no local controls when streaming from server */}
                 </div>
             </Section>
 

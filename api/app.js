@@ -8,6 +8,9 @@ require("dotenv").config({
     path: "../.env",
 });
 
+// Start EnSync subscriber to forward events to Socket.IO clients
+require("./ensync.emit.service");
+
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -51,7 +54,7 @@ const createIntegrator = async (plan, session) => {
                 },
             }
         );
-    
+
         const integratorUrl = `${process.env.ENSYNC_EMBED_URL}/${result.data.data.id}`;
         return integratorUrl;
     } catch (error) {
