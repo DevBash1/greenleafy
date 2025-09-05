@@ -106,7 +106,13 @@ async function startSubscriber() {
                             emitToAll(mapped, payload);
                         }
 
-                        console.log(payload);
+                        console.log(
+                            `Received ${mapped}: ${JSON.stringify(
+                                payload,
+                                null,
+                                2
+                            )}`
+                        );
 
                         // Ack this message
                         await sub.ack(event.idem, event.block);

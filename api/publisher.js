@@ -64,10 +64,12 @@ async function publishLoop() {
 
         try {
             if (receiversId.length > 0) {
-                await client.publish(plantWaterEventName, receiversId, {
+                const data = {
                     level: Math.round(state.waterLevel),
                     timestamp: now,
-                });
+                };
+                await client.publish(plantWaterEventName, receiversId, data);
+                console.log(`Published ${plantWaterEventName}: ${data}`);
             }
         } catch (e) {
             console.error("Failed to publish water", e);
@@ -77,10 +79,18 @@ async function publishLoop() {
 
         try {
             if (receiversId.length > 0) {
-                await client.publish(plantSoilEventName, receiversId, {
+                const data = {
                     moisture: Math.round(state.soilMoisture),
                     timestamp: now,
-                });
+                };
+                await client.publish(plantSoilEventName, receiversId, data);
+                console.log(
+                    `Published ${plantSoilEventName}: ${JSON.stringify(
+                        data,
+                        null,
+                        2
+                    )}`
+                );
             }
         } catch (e) {
             console.error("Failed to publish soil", e);
@@ -90,10 +100,18 @@ async function publishLoop() {
 
         try {
             if (receiversId.length > 0) {
-                await client.publish(plantTempEventName, receiversId, {
+                const data = {
                     celsius: Number(state.temperatureC.toFixed(1)),
                     timestamp: now,
-                });
+                };
+                await client.publish(plantTempEventName, receiversId, data);
+                console.log(
+                    `Published ${plantTempEventName}: ${JSON.stringify(
+                        data,
+                        null,
+                        2
+                    )}`
+                );
             }
         } catch (e) {
             console.error("Failed to publish temp", e);
@@ -103,10 +121,18 @@ async function publishLoop() {
 
         try {
             if (receiversId.length > 0) {
-                await client.publish(plantLightEventName, receiversId, {
+                const data = {
                     lux: Math.round(state.lightLux),
                     timestamp: now,
-                });
+                };
+                await client.publish(plantLightEventName, receiversId, data);
+                console.log(
+                    `Published ${plantLightEventName}: ${JSON.stringify(
+                        data,
+                        null,
+                        2
+                    )}`
+                );
             }
         } catch (e) {
             console.error("Failed to publish light", e);
