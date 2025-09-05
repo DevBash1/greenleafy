@@ -113,12 +113,12 @@ async function publishLoop() {
         }
 
         // Random gap before next cycle
-        await sleep(randInt(1500, 3500));
+        await sleep(randInt(3500, 7500));
 
         console.log("Sent data");
     }
 }
 
-// publishLoop().catch((e) => {
-//     console.error("Publisher crashed", e);
-// });
+publishLoop().catch((e) => {
+    console.error("Publisher crashed", e);
+});

@@ -77,13 +77,13 @@ async function startSubscriber() {
                         lightLux: randInt(3500, 14000), // lux
                     };
 
-                    emitToAll(mapped, {
-                        moisture: state.soilMoisture,
-                        level: state.waterLevel,
-                        celsius: state.temperatureC,
-                        lux: state.lightLux,
-                        timestamp: Date.now(),
-                    });
+                    // emitToAll(mapped, {
+                    //     moisture: state.soilMoisture,
+                    //     level: state.waterLevel,
+                    //     celsius: state.temperatureC,
+                    //     lux: state.lightLux,
+                    //     timestamp: Date.now(),
+                    // });
                 }
             }, 1000);
 
@@ -106,8 +106,10 @@ async function startSubscriber() {
                             emitToAll(mapped, payload);
                         }
 
+                        console.log(payload);
+
                         // Ack this message
-                        // await sub.ack(event.idem, event.block);
+                        await sub.ack(event.idem, event.block);
                         // await subscription.unsubscribe();
                     } catch (e) {
                         console.log("Subscriber handler exception", e);
