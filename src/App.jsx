@@ -88,7 +88,7 @@ export default function App() {
 
     // Socket.IO connection (same host/port pattern as before)
     useEffect(() => {
-        const s = io("http://localhost:4000");
+        const s = io("http://localhost:5000");
         socketRef.current = s;
         s.on("connect", () => {
             console.log("Connected to API:", s.id);

@@ -8,7 +8,7 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "../.env" });
 
 // Optional mapping from EnSync topic to Socket.IO event name (no slashes)
-const workspaceName = "progo";
+const workspaceName = "gms/bash";
 const socketEventMap = {
     [`${workspaceName}/plant/water`]: "plant_water",
     [`${workspaceName}/plant/soil`]: "plant_soil",

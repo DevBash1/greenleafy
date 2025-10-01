@@ -5,7 +5,7 @@ dotenv.config({
     path: "../.env",
 });
 
-const workspaceName = "progo";
+const workspaceName = "gms/bash";
 
 const plantWaterEventName = `${workspaceName}/plant/water`;
 const plantSoilEventName = `${workspaceName}/plant/soil`;
@@ -145,7 +145,7 @@ async function publishLoop() {
         }
 
         // Random gap before next cycle
-        await sleep(randInt(3500, 7500));
+        await sleep(randInt(350, 750));
 
         console.log("Sent data");
     }
